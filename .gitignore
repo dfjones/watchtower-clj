@@ -9,3 +9,6 @@ pom.xml
 .lein-failures
 .lein-plugins
 .lein-env
+watchtower-clj.ipr
+watchtower-clj.iws
+watchtower_clj.iml
