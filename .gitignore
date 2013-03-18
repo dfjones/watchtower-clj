@@ -12,3 +12,4 @@ pom.xml
 watchtower-clj.ipr
 watchtower-clj.iws
 watchtower_clj.iml
+.lein-repl-history
