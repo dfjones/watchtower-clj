@@ -3,8 +3,8 @@
   (:require [monger.collection :as mc])
   (:refer-clojure :exclude [sort find])
   (:use monger.query)
+  (:use clj-time.core)
   (:import [com.mongodb MongoOptions ServerAddress])
-  (:import [java.util Date]))
 
 (mg/connect!)
 
@@ -12,14 +12,16 @@
 
 (def crawl-queue "crawl_queue")
 (def crawl-records "crawl_records")
+(def url-stats "url_stats")
+
+(defn store-url-stat [stat]
+  (mc/insert url-stats stat))
 
 (defn in-crawl-queue [url]
-  (> (mc/count
-       (mc/find crawl-queue {:url url}))
-    0))
+  (> (mc/count crawl-queue {:url url}) 0))
 
 (defn add-to-crawl-queue
-  ([url] (add-to-crawl-queue url (new Date)))
+  ([url] (add-to-crawl-queue url (now)))
   ([url date]
     (if (not (in-crawl-queue url))
       (mc/insert crawl-queue
@@ -57,4 +59,6 @@
       (find {:errorsPresent true})
       (sort (sorted-map :date -1))
       (limit limit))))
+
+(get-newest-crawl-records)
 
