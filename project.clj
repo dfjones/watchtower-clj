@@ -4,7 +4,8 @@
   :dependencies [[org.clojure/clojure "1.5.0"]
                  [compojure "1.1.5"]
                  [hiccup "1.0.2"]
-                 [com.novemberain/monger "1.4.2"]]
+                 [com.novemberain/monger "1.4.2"]
+                 [clj-time "0.4.5"]]
   :plugins [[lein-ring "0.8.2"]]
   :ring {:handler watchtower-clj.handler/app}
   :profiles
