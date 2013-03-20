@@ -1,10 +1,12 @@
 (ns watchtower-clj.db
+  (:use clj-time.core)
   (:require [monger.core :as mg])
   (:require [monger.collection :as mc])
-  (:refer-clojure :exclude [sort find])
+  (:require monger.joda-time)
+  (:refer-clojure :exclude [extend sort find])
   (:use monger.query)
-  (:use clj-time.core)
-  (:import [com.mongodb MongoOptions ServerAddress])
+  (:use monger.operators)
+  (:import [com.mongodb MongoOptions ServerAddress]))
 
 (mg/connect!)
 
@@ -54,11 +56,30 @@
 
 (defn get-crawl-records-with-errors
   ([] (get-crawl-records-with-errors 100))
-  ([limit]
+  ([lim]
     (with-collection crawl-records
       (find {:errorsPresent true})
       (sort (sorted-map :date -1))
-      (limit limit))))
+      (limit lim))))
 
-(get-newest-crawl-records)
 
+(defn get-stats-by-date-range [start end]
+  (with-collection url-stats
+    (find {:date {$gte start $lt end}})
+    (sort {:date 1})))
+
+(defn get-all-stats 
+  ([] (get-all-stats 200))
+  ([lim]
+   (with-collection url-stats
+     (find {})
+     (sort {:date -1})
+     (limit lim))))
+
+(defn get-stats-for-url 
+  ([url] (get-stats-for-url url 100))
+  ([url lim]
+   (with-collection url-stats
+     (find {:url url})
+     (sort {:date -1})
+     (limit lim))))

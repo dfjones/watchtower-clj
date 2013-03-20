@@ -28,3 +28,5 @@ var renderGraph = function () {
 };
 
 renderGraph();
+
+setInterval(renderGraph, 3000);
